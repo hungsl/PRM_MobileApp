@@ -13,26 +13,29 @@ import java.util.List;
 import java.util.Locale;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
-    private static final int VIEW_TYPE_USER = 1;
-    private static final int VIEW_TYPE_ADMIN = 2;
+    private static final int VIEW_TYPE_USER = 1; // Tin nhắn của người dùng hiện tại
+    private static final int VIEW_TYPE_OTHER_USER = 2; // Tin nhắn của user khác
+    private static final int VIEW_TYPE_ADMIN = 3; // Tin nhắn của admin
 
     private Context context;
     private List<Message> messageList;
-    private String currentUserId; // userId của người dùng hiện tại
+    private String currentUser;
 
-    public ChatAdapter(Context context, List<Message> messageList, String currentUserId) {
+    public ChatAdapter(Context context, List<Message> messageList, String currentUser) {
         this.context = context;
         this.messageList = messageList;
-        this.currentUserId = currentUserId;
+        this.currentUser = currentUser;
     }
 
     @Override
     public int getItemViewType(int position) {
         Message message = messageList.get(position);
-        if (message.getSender().equals(currentUserId)) {
-            return VIEW_TYPE_USER;
+        if (message.getSender().equals(currentUser)) {
+            return VIEW_TYPE_USER; // Tin nhắn của người dùng hiện tại
+        } else if (message.getRole().equals("admin")) {
+            return VIEW_TYPE_ADMIN; // Tin nhắn của admin
         } else {
-            return VIEW_TYPE_ADMIN;
+            return VIEW_TYPE_OTHER_USER; // Tin nhắn của user khác
         }
     }
 
@@ -42,8 +45,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         View view;
         if (viewType == VIEW_TYPE_USER) {
             view = LayoutInflater.from(context).inflate(R.layout.item_message_user, parent, false);
-        } else {
+        } else if (viewType == VIEW_TYPE_ADMIN) {
             view = LayoutInflater.from(context).inflate(R.layout.item_message_admin, parent, false);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.item_message_other_user, parent, false);
         }
         return new ChatViewHolder(view);
     }
@@ -52,7 +57,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         Message message = messageList.get(position);
         holder.textViewMessage.setText(message.getText());
-        // Chuyển timestamp thành định dạng thời gian
+        holder.textViewSender.setText(message.getSender());
         String time = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date(message.getTimestamp()));
         holder.textViewTimestamp.setText(time);
     }
@@ -63,12 +68,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     }
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewMessage, textViewTimestamp;
+        TextView textViewMessage, textViewTimestamp, textViewSender;
 
         ChatViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewMessage = itemView.findViewById(R.id.textViewMessage);
             textViewTimestamp = itemView.findViewById(R.id.textViewTimestamp);
+            textViewSender = itemView.findViewById(R.id.textViewSender);
         }
     }
 }

@@ -11,15 +11,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:textColor="@android:color/black"
-        android:textStyle="bold" />
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/textViewMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#FF9800"
-        android:textColor="@android:color/white"
+        android:background="#E0E0E0"
+        android:textColor="@android:color/black"
         android:padding="8dp"
         android:maxWidth="240dp" />
 
