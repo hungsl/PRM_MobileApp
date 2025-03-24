@@ -2,21 +2,28 @@ package com.example.recycleview;
 
 public class Item {
     private int imageResId; // ID của hình ảnh trong drawable
-    private String text;    // Nội dung text
+    private String productName;    // Tên sản phẩm
+    private String briefDescription; // Mô tả ngắn
+    private String fullDescription; // Mô tả đầy đủ
+    private String technicalSpecifications; // Thông số kỹ thuật
+    private double price; // Giá
 
-    // Constructor để khởi tạo giá trị cho item
-    public Item(int imageResId, String text) {
+    // Constructor
+    public Item(int imageResId, String productName, String briefDescription,
+                String fullDescription, String technicalSpecifications, double price) {
         this.imageResId = imageResId;
-        this.text = text;
+        this.productName = productName;
+        this.briefDescription = briefDescription;
+        this.fullDescription = fullDescription;
+        this.technicalSpecifications = technicalSpecifications;
+        this.price = price;
     }
 
-    // Getter để lấy giá trị của hình ảnh
-    public int getImageResId() {
-        return imageResId;
-    }
-
-    // Getter để lấy giá trị text
-    public String getText() {
-        return text;
-    }
+    // Getters
+    public int getImageResId() { return imageResId; }
+    public String getProductName() { return productName; }
+    public String getBriefDescription() { return briefDescription; }
+    public String getFullDescription() { return fullDescription; }
+    public String getTechnicalSpecifications() { return technicalSpecifications; }
+    public double getPrice() { return price; }
 }

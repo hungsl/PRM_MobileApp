@@ -1,6 +1,7 @@
 package com.example.recycleview;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,44 +16,54 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private Context context;
     private List<Item> items;
 
-    // Constructor để nhận dữ liệu
     public MyAdapter(Context context, List<Item> items) {
         this.context = context;
         this.items = items;
     }
 
-    // ViewHolder ánh xạ các view trong item_layout
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView textView;
-
+        TextView price;
         public MyViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             textView = itemView.findViewById(R.id.textView);
+            price = itemView.findViewById(R.id.price);
         }
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate item layout
         View view = LayoutInflater.from(context).inflate(R.layout.item_layout, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        // Lấy dữ liệu của từng item
         Item currentItem = items.get(position);
-
-        // Gán dữ liệu cho TextView và ImageView
-        holder.textView.setText(currentItem.getText());
+        holder.textView.setText(currentItem.getProductName());
         holder.imageView.setImageResource(currentItem.getImageResId());
+        holder.price.setText(String.valueOf(currentItem.getPrice()));
+        // Thêm sự kiện click
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("imageResId", currentItem.getImageResId());
+                intent.putExtra("productName", currentItem.getProductName());
+                intent.putExtra("briefDescription", currentItem.getBriefDescription());
+                intent.putExtra("fullDescription", currentItem.getFullDescription());
+                intent.putExtra("techSpecs", currentItem.getTechnicalSpecifications());
+                intent.putExtra("price", currentItem.getPrice());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return items.size(); // Số lượng item
+        return items.size();
     }
 }

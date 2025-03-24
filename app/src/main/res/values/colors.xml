@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#1E1E1E</color> <!-- Đen xám hiện đại -->
+    <color name="white">#FFFFFF</color> <!-- Trắng tinh khiết -->
+
+    <color name="primary">#007AFF</color> <!-- Xanh dương đậm (Nút chính) -->
+    <color name="primary_variant">#0056B3</color> <!-- Xanh dương đậm hơn -->
+
+    <color name="secondary">#FF9500</color> <!-- Cam sáng (Điểm nhấn) -->
+    <color name="secondary_variant">#C76A00</color> <!-- Cam đậm hơn -->
+
+    <color name="background">#F8F9FA</color> <!-- Xám nhạt (Nền) -->
+    <color name="surface">#FFFFFF</color> <!-- Màu bề mặt (Card, Dialog) -->
+
+    <color name="error">#E63946</color> <!-- Đỏ cảnh báo -->
+
+    <color name="text_primary">#212121</color> <!-- Màu chữ chính (Đen nhạt) -->
+    <color name="text_secondary">#5E5E5E</color> <!-- Màu chữ phụ (Xám) -->
+
+    <color name="divider">#DADCE0</color> <!-- Màu đường kẻ ngăn cách -->
 </resources>
