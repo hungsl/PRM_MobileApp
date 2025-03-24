@@ -42,7 +42,13 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCR1Dz8g1ldAgOgHPxEbkCnERm9Une7AkA" />
+
         <activity android:name=".MapActivity" />
+
+        <activity
+            android:name=".ChatActivity"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
     </application>
 
 </manifest>

@@ -8,6 +8,11 @@ import com.example.recycleview.login.LoginResponse;
 
 import java.util.List;
 
+import com.example.recycleview.login.StoreLocation;
+import com.example.recycleview.login.UserResponse;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -30,4 +35,9 @@ public interface ApiService {
     @GET("cart/items")  // Change this to your actual endpoint
     Call<List<CartItem>> getCartItems(@Header("Authorization") String authToken);
 
+
+    @GET("api/User/GetUser")
+    Call<UserResponse> getUser(@Header("Authorization") String token);
+    @GET("api/StoreLocation")
+    Call<List<StoreLocation>> getStoreLocations();
 }
