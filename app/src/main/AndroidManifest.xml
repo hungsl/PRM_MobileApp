@@ -27,11 +27,18 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-        <activity android:name=".DetailActivity"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
 
-        <activity android:name=".CartActivity" />
+        <activity
+            android:name=".CartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DetailActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+
+
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCR1Dz8g1ldAgOgHPxEbkCnERm9Une7AkA" />

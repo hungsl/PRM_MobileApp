@@ -1,93 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:fitsSystemWindows="true"
-    android:padding="16dp">
-    <!-- Nút Quay về -->
-    <com.google.android.material.button.MaterialButton xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Back"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:paddingVertical="12dp"
-        android:paddingHorizontal="24dp"
-        app:cornerRadius="8dp"
-        app:strokeColor="@color/black"
-        app:backgroundTint="@color/white"
-        app:rippleColor="#20000000"  />
+    android:padding="16dp"
+    tools:context=".CartActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="My Cart"
-        android:textColor="@color/secondary_variant"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:gravity="center" />
 
+    <!-- RecyclerView for cart items -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cartRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:layout_marginBottom="16dp" />
 
+    <!-- TextView to display total price -->
     <TextView
         android:id="@+id/cartTotalTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Total: $0.00"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:paddingBottom="16dp"
+        android:textAlignment="center" />
 
+    <!-- Buttons to clear cart, proceed to checkout, and navigate back -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:padding="8dp">
+        android:layout_marginBottom="16dp">
 
-        <!-- Nút Xóa Giỏ Hàng (Nhỏ hơn) -->
-        <com.google.android.material.button.MaterialButton xmlns:app="http://schemas.android.com/apk/res-auto"
+        <!-- Clear Cart Button -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/clearCartButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Clear all"
-            android:textSize="14sp"
-            android:paddingVertical="8dp"
-            app:cornerRadius="8dp"
-            app:strokeColor="@color/black"
-            app:backgroundTint="@color/white"
-            app:rippleColor="@color/black"
-            android:textColor="@color/black"
-            />
+            android:text="Clear Cart"
 
-        <!-- Khoảng cách giữa hai nút -->
-        <Space
-            android:layout_width="16dp"
-            android:layout_height="wrap_content" />
+            android:layout_marginEnd="8dp"
+            app:iconPadding="8dp"/>
 
-        <!-- Nút Thanh Toán (Nổi bật) -->
-        <com.google.android.material.button.MaterialButton xmlns:app="http://schemas.android.com/apk/res-auto"
+        <!-- Purchase Cart Button -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/purchaseCartButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="Checkout"
-            android:textSize="16sp"
-            android:paddingVertical="12dp"
-            app:cornerRadius="8dp"
-            app:rippleColor="@color/secondary"
-            android:textColor="@color/white"
-            />
+            android:text="Proceed to Checkout"
+            app:icon="@drawable/shopping_cart_checkout_24"
+            android:layout_marginStart="8dp"
+            app:iconPadding="8dp"/>
     </LinearLayout>
 
-
+    <!-- Back Button -->
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:layout_gravity="center"/>
 </LinearLayout>
