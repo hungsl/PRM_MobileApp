@@ -64,12 +64,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Xử lý sự kiện Sign Up (chưa triển khai)
+        // Xử lý sự kiện Sign Up
         signUpText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Triển khai Sign Up sau
-                Toast.makeText(LoginActivity.this, "Sign Up clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -84,6 +84,12 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     String token = response.body().getToken();
                     Toast.makeText(LoginActivity.this, "Login successful! ", Toast.LENGTH_SHORT).show();
+
+                    // Lưu token vào SharedPreferences
+                    getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                            .edit()
+                            .putString("token", token)
+                            .apply();
 
                     // Chuyển sang MainActivity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);

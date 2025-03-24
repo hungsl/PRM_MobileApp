@@ -20,22 +20,26 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-        <activity android:name=".DetailActivity"
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DetailActivity"
             android:windowSoftInputMode="adjustResize">
         </activity>
-
-        <activity android:name=".CartActivity" />
+        <activity
+            android:name=".CartActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCR1Dz8g1ldAgOgHPxEbkCnERm9Une7AkA" />
-        <activity android:name=".MapActivity" />
+        <activity
+            android:name=".MapActivity" />
     </application>
 
 </manifest>
