@@ -44,58 +44,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
         // Tìm RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+         recyclerView = findViewById(R.id.recyclerView);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        List<Item> dataList = new ArrayList<>();
-        dataList.add(new Item(R.drawable.datastructure, "Data Structure",
-                "Basic data structure concepts",
-                "This course covers arrays, linked lists, stacks, queues, and more.",
-                "Duration: 4 weeks\nLevel: Beginner", 49.99));
-        dataList.add(new Item(R.drawable.c_plus, "C++",
-                "Learn C++ programming",
-                "In-depth C++ programming with OOP concepts.",
-                "Duration: 6 weeks\nLevel: Intermediate", 59.99));
-        dataList.add(new Item(R.drawable.java, "Java",
-                "Java programming language",
-                "Comprehensive Java course for all levels.",
-                "Duration: 8 weeks\nLevel: All levels", 69.99));
-        dataList.add(new Item(R.drawable.java_script, "JavaScript",
-                "Master JavaScript basics",
-                "Learn variables, functions, and DOM manipulation in JavaScript.",
-                "Duration: 5 weeks\nLevel: Beginner", 54.99));
-        dataList.add(new Item(R.drawable.java, "Java",
-                "Java programming language",
-                "Comprehensive Java course for all levels.",
-                "Duration: 8 weeks\nLevel: All levels", 69.99));
-        dataList.add(new Item(R.drawable.c_langue, "C-Language",
-                "Introduction to C programming",
-                "Covers basics of C including pointers and memory management.",
-                "Duration: 6 weeks\nLevel: Intermediate", 59.99));
-        dataList.add(new Item(R.drawable.datastructure, "Data Structure",
-                "Basic data structure concepts",
-                "This course covers arrays, linked lists, stacks, queues, and more.",
-                "Duration: 4 weeks\nLevel: Beginner", 49.99));
-        dataList.add(new Item(R.drawable.c_plus, "C++",
-                "Learn C++ programming",
-                "In-depth C++ programming with OOP concepts.",
-                "Duration: 6 weeks\nLevel: Intermediate", 59.99));
-        dataList.add(new Item(R.drawable.c_sharp, "C#",
-                "C# programming essentials",
-                "Build applications with C# and .NET framework.",
-                "Duration: 7 weeks\nLevel: Intermediate", 64.99));
-        dataList.add(new Item(R.drawable.java_script, "JavaScript",
-                "Master JavaScript basics",
-                "Learn variables, functions, and DOM manipulation in JavaScript.",
-                "Duration: 5 weeks\nLevel: Beginner", 54.99));
-        dataList.add(new Item(R.drawable.java, "Java",
-                "Java programming language",
-                "Comprehensive Java course for all levels.",
-                "Duration: 8 weeks\nLevel: All levels", 69.99));
-        dataList.add(new Item(R.drawable.c_langue, "C-Language",
-                "Introduction to C programming",
-                "Covers basics of C including pointers and memory management.",
-                "Duration: 6 weeks\nLevel: Intermediate", 59.99));
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -104,6 +55,28 @@ public class MainActivity extends AppCompatActivity {
         setupSortSpinner();
 
         fetchDataFromApi();
+
+
+        //        // Thiết lập Bottom Navigation
+        bottomNavigationView.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_UNLABELED);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_home) {
+                return true;
+            } else if (itemId == R.id.nav_cart) {
+                Intent cartIntent = new Intent(MainActivity.this, CartActivity.class);
+                startActivity(cartIntent);
+                return true;
+            } else if (itemId == R.id.nav_chat) {
+                startActivity(new Intent(MainActivity.this, ChatActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_map) {
+                startActivity(new Intent(MainActivity.this, MapActivity.class));
+                return true;
+            }return false;
+        });
+
+
     }
 
     private void fetchDataFromApi() {
@@ -120,22 +93,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(MainActivity.this, "Failed to fetch data", Toast.LENGTH_SHORT).show();
                 }
-
-                //        // Thiết lập Bottom Navigation
-//        bottomNavigationView.setOnItemSelectedListener(item -> {
-//            int itemId = item.getItemId();
-//            if (itemId == R.id.nav_home) {
-//                return true;
-//            } else if (itemId == R.id.nav_cart) {
-//                Intent cartIntent = new Intent(MainActivity.this, CartActivity.class);
-//                startActivity(cartIntent);
-//                return true;
-//            } else if (itemId == R.id.nav_map) {
-//                startActivity(new Intent(MainActivity.this, MapActivity.class));
-//                return true;
-//            }
-//            return false;
-//        });
             }
 
             @Override
@@ -145,52 +102,39 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setupSortSpinner() {
-        String[] sortOptions = {"Default", "Price: Low to High", "Price: High to Low", "Alphabetical"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sortOptions);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sortSpinner.setAdapter(adapter);
 
-        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (dataList != null) {
-                    switch (position) {
-                        case 1:
-                            sortByPriceAscending();
-                            break;
-                        case 2:
-                            sortByPriceDescending();
-                            break;
-                        case 3:
-                            sortByAlphabetical();
-                            break;
-                        default:
-                            break;
+        private void setupSortSpinner() {
+            String[] sortOptions = {"Default", "Price: Low to High", "Price: High to Low", "Alphabetical"};
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sortOptions);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sortSpinner.setAdapter(adapter);
+
+            sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (dataList != null) {
+                        switch (position) {
+                            case 1:
+                                sortByPriceAscending();
+                                break;
+                            case 2:
+                                sortByPriceDescending();
+                                break;
+                            case 3:
+                                sortByAlphabetical();
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
-        // Thiết lập Bottom Navigation
-        bottomNavigationView.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_UNLABELED);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_home) {
-                return true;
-            } else if (itemId == R.id.nav_cart) {
-                Intent cartIntent = new Intent(MainActivity.this, CartActivity.class);
-                startActivity(cartIntent);
-                return true;
-            } else if (itemId == R.id.nav_chat) {
-                startActivity(new Intent(MainActivity.this, ChatActivity.class));
-                return true;
-            }else if (itemId == R.id.nav_map) {
-                startActivity(new Intent(MainActivity.this, MapActivity.class));
-                return true;
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-    }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+        }
+
+
 
     private void sortByPriceAscending() {
         Collections.sort(dataList, Comparator.comparingDouble(Item::getPrice));
@@ -206,4 +150,35 @@ public class MainActivity extends AppCompatActivity {
         Collections.sort(dataList, Comparator.comparing(Item::getProductName));
         adapter.notifyDataSetChanged();
     }
+
+//    private void setupSortSpinner() {
+//        String[] sortOptions = {"Default", "Price: Low to High", "Price: High to Low", "Alphabetical"};
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sortOptions);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        sortSpinner.setAdapter(adapter);
+//
+//        sortSpinner.setOnItemSelectedListener(new AdapterView<>().OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                if (dataList != null) {
+//                    switch (position) {
+//                        case 1:
+//                            sortByPriceAscending();
+//                            break;
+//                        case 2:
+//                            sortByPriceDescending();
+//                            break;
+//                        case 3:
+//                            sortByAlphabetical();
+//                            break;
+//                        default:
+//                            break;
+//                    }
+//                }
+//
+//
+//                @Override
+//                public void onNothingSelected(AdapterView<?> parent) {}
+//            });
+//        }
 }
