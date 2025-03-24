@@ -86,14 +86,13 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_home) {
-
                 return true;
             } else if (itemId == R.id.nav_cart) {
                 Intent cartIntent = new Intent(MainActivity.this, CartActivity.class);
                 startActivity(cartIntent);
                 return true;
-            } else if (itemId == R.id.nav_user) {
-                Toast.makeText(MainActivity.this, "User tab clicked", Toast.LENGTH_SHORT).show();
+            } else if (itemId == R.id.nav_map) {
+                startActivity(new Intent(MainActivity.this, MapActivity.class));
                 return true;
             }
             return false;
