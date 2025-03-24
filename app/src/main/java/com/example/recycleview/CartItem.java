@@ -1,7 +1,6 @@
 package com.example.recycleview;
 
 public class CartItem {
-    private int cartId;
     private int productId;
     private String productName;
     private double price;

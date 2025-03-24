@@ -186,7 +186,9 @@
 
 package com.example.recycleview;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -196,6 +198,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recycleview.api.ApiService;
 import com.example.recycleview.api.RetrofitClient;
+import com.example.recycleview.login.UserResponse;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
@@ -211,6 +214,8 @@ public class CartActivity extends AppCompatActivity {
     private MaterialButton purchaseCartButton;
     private List<CartItem> cartItems;
     private String jwtToken;
+    private String currentUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,26 +229,47 @@ public class CartActivity extends AppCompatActivity {
         purchaseCartButton = findViewById(R.id.purchaseCartButton);
         Button backButton = findViewById(R.id.backButton);
 
-        // Set up RecyclerView
+        // Set up RecyclerView with empty adapter initially
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        CartAdapter cartAdapter = new CartAdapter(CartActivity.this, cartItems);
+        cartRecyclerView.setAdapter(cartAdapter);
 
-        // Get JWT token from SharedPreferences
-        jwtToken = "Bearer " + getSharedPreferences("user_prefs", MODE_PRIVATE).getString("jwt_token", "");
+        // Fetch user data and then cart data
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String token = prefs.getString("token", null);
+        ApiService apiService = RetrofitClient.getApiService();
+        Call<UserResponse> call = apiService.getUser(token);
+        call.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    currentUser = response.body().getUsername();
+                    fetchCartData(currentUser); // Fetch cart data after user is set
+                } else {
+                    Log.e("CartActivity", "Failed to fetch user data: " + response.code());
+                    finish();
+                }
+            }
 
-        // Fetch the cart data
-        fetchCartData();
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                Log.e("CartActivity", "Error fetching user data: " + t.getMessage());
+                finish();
+            }
+        });
 
-        // Set listeners for buttons
+        // Set listeners
         clearCartButton.setOnClickListener(v -> clearCart());
         purchaseCartButton.setOnClickListener(v -> checkout());
         backButton.setOnClickListener(v -> finish());
     }
 
-    private void fetchCartData() {
+    private void fetchCartData(String user) {
+        if(user == null) user = "justin";
         ApiService apiService = RetrofitClient.getApiService();
 
         // Make the network request with the Authorization header
-        Call<List<CartItem>> call = apiService.getCartItems(jwtToken);
+        Call<List<CartItem>> call = apiService.getCartItems(user);
         call.enqueue(new Callback<List<CartItem>>() {
             @Override
             public void onResponse(Call<List<CartItem>> call, Response<List<CartItem>> response) {

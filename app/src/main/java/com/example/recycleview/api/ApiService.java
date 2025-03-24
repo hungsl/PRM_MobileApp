@@ -3,6 +3,7 @@ package com.example.recycleview.api;
 import com.example.recycleview.CartItem;
 import com.example.recycleview.Item;
 import com.example.recycleview.ProductDetailDTO;
+import com.example.recycleview.RequestAddtoCartDTO;
 import com.example.recycleview.login.LoginRequest;
 import com.example.recycleview.login.LoginResponse;
 
@@ -29,11 +30,10 @@ public interface ApiService {
     Call<ProductDetailDTO> getProductDetail(@Path("id") int productId);
     @POST("cart/add")  // Replace with your actual API endpoint
     Call<Void> addToCart(
-            @Header("Authorization") String authToken, // JWT token for authorization
-            @Body CartItem cartItem // The CartItem object to send to the backend
+            @Body RequestAddtoCartDTO requestAddtoCartDTO // The CartItem object to send to the backend
     );
-    @GET("cart/items")  // Change this to your actual endpoint
-    Call<List<CartItem>> getCartItems(@Header("Authorization") String authToken);
+    @GET("api/Cart/cartItems/{userName}")  // Change this to your actual endpoint
+    Call<List<CartItem>> getCartItems(@Path("userName") String userName);
 
 
     @GET("api/User/GetUser")

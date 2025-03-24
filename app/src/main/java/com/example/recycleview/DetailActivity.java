@@ -237,7 +237,10 @@ public class DetailActivity extends AppCompatActivity {
     private TextView detailProductName, detailBriefDescription, detailFullDescription, detailTechSpecs, detailPrice, detailCategory, quantityTextView;
     private MaterialButton backButton, addToCartButton, increaseButton, decreaseButton;
     private int quantity = 1; // Default quantity
-
+    private  int userId= 0 ;
+    private int GetUserIDFromToken(){
+        return 1;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -261,7 +264,8 @@ public class DetailActivity extends AppCompatActivity {
         if (productId > 0) {
             fetchProductDetail(productId);
         }
-
+        //TODO fetch the user id
+        userId = GetUserIDFromToken();
         // Back button logic
         backButton.setOnClickListener(v -> finish());
 
@@ -279,22 +283,7 @@ public class DetailActivity extends AppCompatActivity {
             quantityTextView.setText(String.valueOf(quantity));
         });
 
-        // Add to Cart logic
-//        addToCartButton.setOnClickListener(v -> {
-//            try {
-//                String productName = detailProductName.getText().toString();
-//                double price = Double.parseDouble(detailPrice.getText().toString().replace("$", ""));
-//                int productIdFromTextView = Integer.parseInt(detailProductName.getTag().toString()); // Use tag to store ID
-//
-//                CartItem cartItem = new CartItem(productIdFromTextView, productName, price, quantity);
-//                CartActivity.getCartItems().add(cartItem);
-//
-//                Toast.makeText(this, productName + " added to cart! Quantity: " + quantity, Toast.LENGTH_SHORT).show();
-//            } catch (Exception e) {
-//                Toast.makeText(this, "Error adding to cart", Toast.LENGTH_SHORT).show();
-//                Log.e("DetailActivity", "Error adding item to cart", e);
-//            }
-//        });
+
 
         addToCartButton.setOnClickListener(v -> {
             try {
@@ -311,7 +300,12 @@ public class DetailActivity extends AppCompatActivity {
 
                 // Make the API call to save the cart item
                 ApiService apiService = RetrofitClient.getApiService();
-                Call<Void> call = apiService.addToCart("Bearer " + jwtToken, cartItem);
+
+                //TODO
+                RequestAddtoCartDTO requestAddtoCartDTO = new RequestAddtoCartDTO(cartItem.getProductId(), cartItem.getQuantity(), userId);
+
+
+                Call<Void> call = apiService.addToCart(requestAddtoCartDTO);
 
                 call.enqueue(new Callback<Void>() {
                     @Override
@@ -376,4 +370,5 @@ public class DetailActivity extends AppCompatActivity {
                 .error(R.drawable.placeholderimgproductdetail)
                 .into(detailImageView);
     }
+
 }
