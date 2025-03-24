@@ -30,12 +30,8 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
-        <activity
-            android:name=".DetailActivity"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
-        <activity
-            android:name=".CartActivity" />
+
+
 
         <activity
             android:name=".CartActivity"
