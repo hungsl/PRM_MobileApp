@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.FirebaseApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        FirebaseApp.initializeApp(this);
         // Tìm RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         // Thiết lập Bottom Navigation
+        bottomNavigationView.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_UNLABELED);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.nav_home) {
@@ -91,7 +94,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent cartIntent = new Intent(MainActivity.this, CartActivity.class);
                 startActivity(cartIntent);
                 return true;
-            } else if (itemId == R.id.nav_map) {
+            } else if (itemId == R.id.nav_chat) {
+                startActivity(new Intent(MainActivity.this, ChatActivity.class));
+                return true;
+            }else if (itemId == R.id.nav_map) {
                 startActivity(new Intent(MainActivity.this, MapActivity.class));
                 return true;
             }

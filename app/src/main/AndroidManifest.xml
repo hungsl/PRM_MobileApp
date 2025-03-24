@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_CLIPBOARD" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -32,10 +33,17 @@
         </activity>
 
         <activity android:name=".CartActivity" />
+<!--        local-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCR1Dz8g1ldAgOgHPxEbkCnERm9Une7AkA" />
+
         <activity android:name=".MapActivity" />
+
+        <activity
+            android:name=".ChatActivity"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
     </application>
 
 </manifest>
