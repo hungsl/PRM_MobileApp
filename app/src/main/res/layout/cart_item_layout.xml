@@ -1,56 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="horizontal"
-android:padding="8dp">
-
-<ImageView
-    android:id="@+id/cartImageView"
-    android:layout_width="80dp"
-    android:layout_height="80dp"
-    android:scaleType="centerCrop" />
-
-<LinearLayout
-    android:layout_width="0dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:orientation="vertical"
-    android:layout_marginStart="8dp">
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="?android:attr/selectableItemBackground">
 
+    <!-- Product Image -->
+    <ImageView
+        android:id="@+id/cartImageView"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/placeholderimgproductdetail" />
+
+    <!-- Product Name -->
     <TextView
         android:id="@+id/cartProductName"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Product Name"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:layout_gravity="center_vertical"
+        android:paddingStart="8dp"/>
 
+    <!-- Product Price -->
     <TextView
         android:id="@+id/cartPrice"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="$0.00"
         android:textSize="14sp"
-        android:textColor="#FF5722" />
+        android:layout_gravity="center_vertical"
+        android:paddingStart="8dp"/>
 
+    <!-- Product Quantity -->
     <EditText
         android:id="@+id/cartQuantity"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:inputType="number"
-        android:minHeight="48dp"
-        android:text="1"
-        android:textAlignment="center"
-        android:textSize="14sp" />
-    </LinearLayout>
+        android:hint="Qty"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:maxLines="1"
+        android:padding="32dp" />
 
+    <!-- Remove Button -->
     <ImageButton
         android:id="@+id/removeButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:scaleType="centerInside"
-        android:padding="8dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@android:drawable/ic_delete"
+        android:contentDescription="Remove item"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/delete_24"
-     />
+        android:background="?android:attr/selectableItemBackground" />
 </LinearLayout>

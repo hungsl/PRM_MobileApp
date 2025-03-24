@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "165474211205",
+    "firebase_url": "https://dapvietexe201-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "dapvietexe201",
+    "storage_bucket": "dapvietexe201.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:165474211205:android:dae972d10c0b76b35360ec",
+        "android_client_info": {
+          "package_name": "com.example.recycleview"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhF4TRAg0OO6KHT1GnD9Av7RNfnHVUZA0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:165474211205:android:5677bf884a3edf6e5360ec",
+        "android_client_info": {
+          "package_name": "com.mobile.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhF4TRAg0OO6KHT1GnD9Av7RNfnHVUZA0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

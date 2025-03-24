@@ -83,13 +83,14 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     String token = response.body().getToken();
-                    Toast.makeText(LoginActivity.this, "Login successful! ", Toast.LENGTH_SHORT).show();
 
                     // Lưu token vào SharedPreferences
                     getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
                             .edit()
                             .putString("token", token)
                             .apply();
+
+                    Toast.makeText(LoginActivity.this, "Login successful! ", Toast.LENGTH_SHORT).show();
 
                     // Chuyển sang MainActivity
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
