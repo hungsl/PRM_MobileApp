@@ -3,12 +3,12 @@ package com.example.recycleview;
 public class RequestAddtoCartDTO {
     private int productId;
     private int quantity;
-    private int userId;
+    private String userName;
 
-    public RequestAddtoCartDTO(int productId, int quantity, int userId) {
+    public RequestAddtoCartDTO(int productId, int quantity, String userName) {
         this.productId = productId;
         this.quantity = quantity;
-        this.userId = userId;
+        this.userName = userName;
     }
 
     public int getProductId() {
@@ -27,11 +27,11 @@ public class RequestAddtoCartDTO {
         this.quantity = quantity;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUserId() {
+        return userName;
     }
 
     public void setUserId(int userId) {
-        this.userId = userId;
+        this.userName = userName;
     }
 }

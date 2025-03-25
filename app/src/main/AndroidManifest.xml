@@ -30,7 +30,8 @@
 
         <activity
             android:name=".CartActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".DetailActivity"
             android:exported="false"

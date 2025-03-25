@@ -1,13 +1,15 @@
 package com.example.recycleview;
 
 public class CartItem {
+    private int cartItemId;
     private int productId;
     private String productName;
     private double price;
     private int quantity;
     private String productImage;
 
-    public CartItem(int productId, String productName, double price, int quantity, String productImage) {
+    public CartItem(int cartItemId, int productId, String productName, double price, int quantity, String productImage) {
+        this.cartItemId = cartItemId;
         this.productId = productId;
         this.productName = productName;
         this.price = price;
@@ -16,11 +18,15 @@ public class CartItem {
     }
 
     public CartItem(int productId, String productName, double price, int quantity) {
+        this.cartItemId = 0; // Giá trị mặc định cho cartItemId
         this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.quantity = quantity;
-        this.productImage = productImage;
+        this.productImage = null; // Gán giá trị mặc định cho productImage
+    }
+    public int getCartItemId() {
+        return cartItemId;
     }
 
     public int getProductId() {

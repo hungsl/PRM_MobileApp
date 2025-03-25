@@ -38,7 +38,7 @@
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Price: $99.99"
+            android:text="Price: đ 99.99"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="#FF0000"

@@ -201,6 +201,7 @@ import com.example.recycleview.api.RetrofitClient;
 import com.example.recycleview.login.UserResponse;
 import com.google.android.material.button.MaterialButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -214,7 +215,8 @@ public class CartActivity extends AppCompatActivity {
     private MaterialButton purchaseCartButton;
     private List<CartItem> cartItems;
     private String jwtToken;
-    private String currentUser;
+    private String userName;
+    private CartAdapter cartAdapter;
 
 
     @Override
@@ -229,31 +231,50 @@ public class CartActivity extends AppCompatActivity {
         purchaseCartButton = findViewById(R.id.purchaseCartButton);
         Button backButton = findViewById(R.id.backButton);
 
-        // Set up RecyclerView with empty adapter initially
+
+        // Khởi tạo cartItems và adapter
+        cartItems = new ArrayList<>();
+        cartAdapter = new CartAdapter(CartActivity.this, cartItems);
         cartRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        CartAdapter cartAdapter = new CartAdapter(CartActivity.this, cartItems);
         cartRecyclerView.setAdapter(cartAdapter);
 
         // Fetch user data and then cart data
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String token = prefs.getString("token", null);
+        if (token == null) {
+            Log.e("ChatActivity", "Token is null!");
+            finish();
+            return;
+        }
+        Log.d("ChatActivity", "Token: " + token);
+
+
+        // Gọi API
         ApiService apiService = RetrofitClient.getApiService();
-        Call<UserResponse> call = apiService.getUser(token);
+        if (apiService == null) {
+            Log.e("ChatActivity", "ApiService is null!");
+            finish();
+            return;
+        }
+        Call<UserResponse> call = apiService.getUser("Bearer " + token);
         call.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    currentUser = response.body().getUsername();
-                    fetchCartData(currentUser); // Fetch cart data after user is set
+                    UserResponse user = response.body();
+                    userName = user.getUsername();
+                    fetchCartData(userName);
                 } else {
-                    Log.e("CartActivity", "Failed to fetch user data: " + response.code());
+                    Log.e("ChatActivity", "Failed to fetch user data: " + response.code());
+                    // Xử lý lỗi (ví dụ: hiển thị thông báo và quay lại)
                     finish();
                 }
             }
 
             @Override
             public void onFailure(Call<UserResponse> call, Throwable t) {
-                Log.e("CartActivity", "Error fetching user data: " + t.getMessage());
+                Log.e("ChatActivity", "Error fetching user data: " + t.getMessage());
+                // Xử lý lỗi (ví dụ: hiển thị thông báo và quay lại)
                 finish();
             }
         });
@@ -263,43 +284,67 @@ public class CartActivity extends AppCompatActivity {
         purchaseCartButton.setOnClickListener(v -> checkout());
         backButton.setOnClickListener(v -> finish());
     }
-
     private void fetchCartData(String user) {
-        if(user == null) user = "justin";
-        ApiService apiService = RetrofitClient.getApiService();
+        if (user == null) {
+            Toast.makeText(CartActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        // Make the network request with the Authorization header
+        ApiService apiService = RetrofitClient.getApiService();
         Call<List<CartItem>> call = apiService.getCartItems(user);
         call.enqueue(new Callback<List<CartItem>>() {
             @Override
             public void onResponse(Call<List<CartItem>> call, Response<List<CartItem>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // Get the cart items from the response and update the RecyclerView
-                    cartItems = response.body();
+                    // Cập nhật cartItems và thông báo cho adapter
+                    cartItems.clear();
+                    cartItems.addAll(response.body());
+                    cartAdapter.notifyDataSetChanged();
                     updateCartTotal();
-
-                    // Set up adapter for RecyclerView
-                    CartAdapter cartAdapter = new CartAdapter(CartActivity.this, cartItems);
-                    cartRecyclerView.setAdapter(cartAdapter);
                 } else {
-                    Toast.makeText(CartActivity.this, "Failed to load cart items", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CartActivity.this, "Failed to load cart items: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Log.e("CartActivity", "Failed to load cart items: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<List<CartItem>> call, Throwable t) {
-                Toast.makeText(CartActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CartActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("CartActivity", "Network error: " + t.getMessage());
             }
         });
     }
 
     // Method to update the total price of the cart
     private void clearCart() {
-        if (cartItems != null) {
-            cartItems.clear();
-            updateCartTotal();
-            cartRecyclerView.getAdapter().notifyDataSetChanged();
+        if (userName == null) {
+            Toast.makeText(CartActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        ApiService apiService = RetrofitClient.getApiService();
+        Call<Void> call = apiService.clearCart(userName);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    // Xóa giỏ hàng trên giao diện
+                    cartItems.clear();
+                    cartAdapter.notifyDataSetChanged();
+                    updateCartTotal();
+                    Toast.makeText(CartActivity.this, "Cart cleared successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CartActivity.this, "Failed to clear cart: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Log.e("CartActivity", "Failed to clear cart: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(CartActivity.this, "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("CartActivity", "Network error: " + t.getMessage());
+            }
+        });
     }
 
     public void updateCartTotal() {
@@ -309,7 +354,7 @@ public class CartActivity extends AppCompatActivity {
                 total += item.getPrice() * item.getQuantity();
             }
         }
-        cartTotalTextView.setText(String.format("Total: $%.2f", total));
+        cartTotalTextView.setText(String.format("Total: đ %.2f", total));
     }
 
     // Method to handle the checkout process (you can navigate to a CheckoutActivity or show a dialog)

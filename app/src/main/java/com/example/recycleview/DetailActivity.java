@@ -225,6 +225,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.recycleview.api.ApiService;
 import com.example.recycleview.api.RetrofitClient;
+import com.example.recycleview.login.UserResponse;
 import com.google.android.material.button.MaterialButton;
 
 import retrofit2.Call;
@@ -237,7 +238,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView detailProductName, detailBriefDescription, detailFullDescription, detailTechSpecs, detailPrice, detailCategory, quantityTextView;
     private MaterialButton backButton, addToCartButton, increaseButton, decreaseButton;
     private int quantity = 1; // Default quantity
-    private  int userId= 0 ;
+    private  String userName;
     private int GetUserIDFromToken(){
         return 1;
     }
@@ -265,7 +266,45 @@ public class DetailActivity extends AppCompatActivity {
             fetchProductDetail(productId);
         }
         //TODO fetch the user id
-        userId = GetUserIDFromToken();
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String token = prefs.getString("token", null);
+        if (token == null) {
+            Log.e("ChatActivity", "Token is null!");
+            finish();
+            return;
+        }
+        Log.d("ChatActivity", "Token: " + token);
+
+        // Gọi API
+        ApiService apiService = RetrofitClient.getApiService();
+        if (apiService == null) {
+            Log.e("ChatActivity", "ApiService is null!");
+            finish();
+            return;
+        }
+        Call<UserResponse> call = apiService.getUser("Bearer " + token);
+        call.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    UserResponse user = response.body();
+                    userName = user.getUsername();
+                } else {
+                    Log.e("ChatActivity", "Failed to fetch user data: " + response.code());
+                    // Xử lý lỗi (ví dụ: hiển thị thông báo và quay lại)
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                Log.e("ChatActivity", "Error fetching user data: " + t.getMessage());
+                // Xử lý lỗi (ví dụ: hiển thị thông báo và quay lại)
+                finish();
+            }
+        });
+
+
         // Back button logic
         backButton.setOnClickListener(v -> finish());
 
@@ -284,42 +323,39 @@ public class DetailActivity extends AppCompatActivity {
         });
 
 
-
+        // Add to cart button logic
         addToCartButton.setOnClickListener(v -> {
+            if (userName == null) {
+                Toast.makeText(DetailActivity.this, "User data not loaded yet. Please try again.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             try {
                 String productName = detailProductName.getText().toString();
                 double price = Double.parseDouble(detailPrice.getText().toString().replace("$", ""));
-                int productIdFromTextView = Integer.parseInt(detailProductName.getTag().toString()); // Use tag to store ID
+                int productIdFromTextView = Integer.parseInt(detailProductName.getTag().toString());
 
-                // Create CartItem object
-                CartItem cartItem = new CartItem(productIdFromTextView, productName, price, quantity);
+                // Tạo RequestAddtoCartDTO
+                RequestAddtoCartDTO requestAddtoCartDTO = new RequestAddtoCartDTO(productIdFromTextView, quantity, userName);
 
-                // Get the JWT token from shared preferences (or wherever you store it)
-                SharedPreferences preferences = getSharedPreferences("user_data", MODE_PRIVATE);
-                String jwtToken = preferences.getString("jwt_token", "");
+                // Gọi API addToCart
+                ApiService apiServiceAddToCart = RetrofitClient.getApiService();
+                Call<Void> addToCartCall = apiServiceAddToCart.addToCart(requestAddtoCartDTO);
 
-                // Make the API call to save the cart item
-                ApiService apiService = RetrofitClient.getApiService();
-
-                //TODO
-                RequestAddtoCartDTO requestAddtoCartDTO = new RequestAddtoCartDTO(cartItem.getProductId(), cartItem.getQuantity(), userId);
-
-
-                Call<Void> call = apiService.addToCart(requestAddtoCartDTO);
-
-                call.enqueue(new Callback<Void>() {
+                addToCartCall.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
                             Toast.makeText(DetailActivity.this, productName + " added to cart! Quantity: " + quantity, Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(DetailActivity.this, "Failed to add item to cart.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DetailActivity.this, "Failed to add item to cart. Error code: " + response.code(), Toast.LENGTH_SHORT).show();
+                            Log.e("DetailActivity", "Add to cart failed: " + response.code());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
                         Toast.makeText(DetailActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("DetailActivity", "Add to cart error: " + t.getMessage());
                     }
                 });
 
@@ -328,7 +364,6 @@ public class DetailActivity extends AppCompatActivity {
                 Log.e("DetailActivity", "Error adding item to cart", e);
             }
         });
-
     }
 
     private void fetchProductDetail(int productId) {
